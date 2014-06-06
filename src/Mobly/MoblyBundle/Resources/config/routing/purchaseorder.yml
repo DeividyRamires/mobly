@@ -1,0 +1,30 @@
+purchaseorder:
+    pattern:  /
+    defaults: { _controller: "MoblyMoblyBundle:PurchaseOrder:index" }
+
+purchaseorder_show:
+    pattern:  /{id}/show
+    defaults: { _controller: "MoblyMoblyBundle:PurchaseOrder:show" }
+
+purchaseorder_new:
+    pattern:  /new
+    defaults: { _controller: "MoblyMoblyBundle:PurchaseOrder:new" }
+
+purchaseorder_create:
+    pattern:  /create
+    defaults: { _controller: "MoblyMoblyBundle:PurchaseOrder:create" }
+    requirements: { _method: post }
+
+purchaseorder_edit:
+    pattern:  /{id}/edit
+    defaults: { _controller: "MoblyMoblyBundle:PurchaseOrder:edit" }
+
+purchaseorder_update:
+    pattern:  /{id}/update
+    defaults: { _controller: "MoblyMoblyBundle:PurchaseOrder:update" }
+    requirements: { _method: post|put }
+
+purchaseorder_delete:
+    pattern:  /{id}/delete
+    defaults: { _controller: "MoblyMoblyBundle:PurchaseOrder:delete" }
+    requirements: { _method: post|delete }

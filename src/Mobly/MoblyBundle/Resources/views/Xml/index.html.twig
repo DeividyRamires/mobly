@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<orders>
+{% for valor in entity %}
+<order order_number="{% set numero = valor.orderNumber|length-10 %}{% for i in 1..numero|abs %}{{ 0 }}{% endfor %}{{ valor.orderNumber }}">
+        <created_at>{{ valor.createdAt|date('Y-m-d H:i:s') }}</created_at>
+        <updated_at>{% if valor.updatedAt %}{{ valor.updatedAt|date('Y-m-d H:i:s') }}{% endif %}</updated_at>
+        <cost>{{ valor.totalCost|number_format(2, '.', ',') }}</cost>
+        <discount>{{ valor.totalDiscount|number_format(2, '.', ',') }}</discount>
+        {% if valor.itens != "" %}
+        <items>
+            {% for item in valor.itens %}
+            <item item_number="{% set numero = item.itemNumber|length-3 %}{% for i in 1..numero|abs %}{{ 0 }}{% endfor %}{{ item.itemNumber }}">
+                <created_at>{{ item.createdAt|date('Y-m-d H:i:s') }}</created_at>
+                <updated_at>{% if item.updatedAt %}{{ item.updatedAt|date('Y-m-d H:i:s') }}{% endif %}</updated_at>
+                <cost>{{ item.cost|number_format(2, '.', ',') }}</cost>
+                <discount>{{ item.discount|number_format(2, '.', ',') }}</discount>
+            </item>
+            {% endfor %}
+        </items>
+        {% endif %}
+</order>      
+{% endfor %}
+</orders>

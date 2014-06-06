@@ -1,0 +1,7 @@
+parameters:
+#    mobly_mobly.example.class: Mobly\MoblyBundle\Example
+
+services:
+#    mobly_mobly.example:
+#        class: %mobly_mobly.example.class%
+#        arguments: [@service_id, "plain_value", %parameter%]

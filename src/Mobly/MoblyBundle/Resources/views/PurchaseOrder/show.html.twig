@@ -1,0 +1,69 @@
+{% extends '::base.html.twig' %}
+
+{% block body -%}
+    <h1>Ordem de Compra</h1>
+
+    {% for flashMessage in app.session.flashbag.get('success') %}
+    <div class="alert alert-success clearfix">
+        <p>{{ flashMessage }}</p>
+    </div>
+    {% endfor %}
+    
+    <table class="record_properties">
+        <tbody>
+            <tr>
+                <th>Número da Ordem</th>
+                <td>
+                    {% set numero = entity.orderNumber|length-10 %}
+                    {% for i in 1..numero|abs %}{{ 0 }}{% endfor %}{{ entity.orderNumber }}                
+                </td>
+            </tr>
+            <tr>
+                <th>Custo Total</th>
+                <td>R$ {{ entity.totalCost|number_format(2, ',', '.') }}</td>
+            </tr>
+            <tr>
+                <th>Desconto Total</th>
+                <td>R$ {{ entity.totalDiscount|number_format(2, ',', '.') }}</td>
+            </tr>
+        </tbody>
+    </table>
+
+    {% for item in entity.itens %}
+        <table class="table table-hover table-striped">
+            <tr>
+                <td>
+                    <div class="form-group">
+                        <b>Número do Item</b>
+                        {% set numero = item.itemNumber|length-3 %}
+                        {% for i in 1..numero|abs %}{{ 0 }}{% endfor %}{{ item.itemNumber }}
+                    </div>
+                </td>
+                <td>
+                    <div class="form-group">
+                        <b>Custo</b>
+                        R$ {{ item.cost|number_format(2, ',', '.') }}
+                    </div>
+                </td>
+                <td>
+                    <div class="form-group">
+                        <b>Desconto</b>
+                        R$ {{ item.discount|number_format(2, ',', '.') }}
+                    </div>                  
+                </td>
+                <td>
+                    <div class="form-group">
+                        <b>Total</b>
+                        R$ {{ (item.cost - item.discount)|number_format(2, ',', '.') }}
+                    </div>                  
+                </td>                        
+            </tr>
+        </table>
+    {% endfor %}
+    
+    <hr />
+    <a href="{{ path('purchaseorder') }}" class="btn btn-default pull-right">Voltar</a>
+    <a href="{{ path('purchaseorder_edit', { 'id': entity.id }) }}" class="btn btn-primary pull-left">Editar</a>
+    
+    {{ form(delete_form) }}
+{% endblock %}

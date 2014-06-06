@@ -1,0 +1,37 @@
+Mobly\MoblyBundle\Entity\PurchaseOrder:
+    constraints:
+        - Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity:
+            fields: [orderNumber]
+            errorPath: orderNumber
+            message: 'Não pode cadastrar Order repetida.'
+    properties:
+        orderNumber:
+            - NotBlank: ~
+#            - Range:
+#                min: 1
+#                max: 10
+#                minMessage: "No mínimo 1 caracter"
+#                maxMessage: "No máximo 10 caracteres"            
+        totalCost:
+            - NotBlank: ~
+        totalDiscount:
+            - NotBlank: ~
+            
+Mobly\MoblyBundle\Entity\Item:
+#    constraints:
+#        - Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity:
+#            fields: [item_number]
+#            errorPath: item_number
+#            message: 'Não pode cadastrar Item repetido.'
+    properties:
+        itemNumber:
+            - NotBlank: ~
+            - Range:
+                min: 1
+                max: 3
+                minMessage: "No mínimo 1 caracter"
+                maxMessage: "No máximo 3 caracteres"
+        cost:
+            - NotBlank: ~
+        discount:
+            - NotBlank: ~        

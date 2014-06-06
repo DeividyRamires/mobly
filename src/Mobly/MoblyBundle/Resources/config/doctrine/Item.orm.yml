@@ -1,0 +1,63 @@
+Mobly\MoblyBundle\Entity\Item:
+    type: entity
+    table: item
+    indexes:
+        fk_item_purchase_order_idx1:
+            columns:
+                - purchase_order_id
+    uniqueConstraints:
+        item_number:
+            columns:
+                - item_number
+    id:
+        id:
+            type: integer
+            nullable: false
+            unsigned: false
+            comment: ''
+            id: true
+            column: item_id
+            generator:
+                strategy: IDENTITY            
+    fields:
+        itemNumber:
+            type: integer
+            nullable: false
+            unsigned: false
+            comment: ''
+            column: item_number
+        createdAt:
+            type: datetime
+            nullable: false
+            comment: ''
+            column: created_at
+        updatedAt:
+            type: datetime
+            nullable: true
+            comment: ''
+            column: updated_at
+        cost:
+            type: float
+            nullable: false
+            precision: 10
+            scale: 2
+            comment: ''
+        discount:
+            type: float
+            nullable: true
+            precision: 10
+            scale: 2
+            comment: ''
+    manyToOne:
+        purchaseOrder:
+            targetEntity: PurchaseOrder
+            cascade: [all]
+            mappedBy: null
+            inversedBy: itens
+            joinColumns:
+                purchase_order_id:
+                    referencedColumnName: purchase_order_id
+            orphanRemoval: false
+    lifecycleCallbacks:
+        prePersist: [ preInsert ]
+        preUpdate: [ preUpdate ]

@@ -1,0 +1,201 @@
+{% extends '::base.html.twig' %}
+{% block stylesheets %}
+<style type="text/css">
+ul li {
+    padding: 0px;
+    margin: 0px;
+    list-style: none;
+}
+</style>
+{% endblock %}
+{% block body -%}
+    <h1>Ordem de Compra</h1>
+    
+    {% for flashMessage in app.session.flashbag.get('success') %}
+    <div class="alert alert-success clearfix">
+        <p>{{ flashMessage }}</p>
+    </div>
+    {% endfor %}
+    
+    {{ form_start(edit_form, {'attr' : {'class':'form'} }) }}
+    {{ form_errors(edit_form) }}
+    
+    
+    <div class="form-group">
+        {{ form_label(edit_form.orderNumber) }}        
+        {{ form_widget(edit_form.orderNumber, {'attr': {'class': 'form-control', 'maxlength':'10'} }) }}
+        {{ form_errors(edit_form.orderNumber) }}
+    </div>
+    <div class="form-group">
+        {{ form_label(edit_form.totalCost) }}
+        {{ form_widget(edit_form.totalCost, {'attr': {'class': 'form-control valorCusto', 'maxlength':'10'} }) }}
+        {{ form_errors(edit_form.totalCost) }}
+    </div>
+    <div class="form-group">
+        {{ form_label(edit_form.totalDiscount) }}
+        {{ form_widget(edit_form.totalDiscount, {'attr': {'class': 'form-control valorDesconto', 'maxlength':'10'} }) }}
+        {{ form_errors(edit_form.totalDiscount) }}
+    </div>
+    
+    {% for item in edit_form.itens %}
+        <table class="table table-hover table-striped">
+            <tr>
+                <td>
+                    <div class="form-group">
+                        {{ form_label(item.itemNumber) }}
+                        {{ form_widget(item.itemNumber, {'attr': {'class': 'form-control desconto', 'maxlength':'3'} }) }}
+                        {{ form_errors(item.itemNumber) }}
+                    </div>
+                </td>
+                <td>
+                    <div class="form-group">
+                        {{ form_label(item.cost) }}
+                        {{ form_widget(item.cost, {'attr': {'class': 'form-control desconto', 'maxlength':'10'} }) }}
+                        {{ form_errors(item.cost) }}
+                    </div>
+                </td>
+                <td>
+                    <div class="form-group">
+                        {{ form_label(item.discount ) }}
+                        {{ form_widget(item.discount, {'attr': {'class': 'form-control desconto', 'maxlength':'10'} }) }}
+                        {{ form_errors(item.discount) }}
+                    </div>
+                </td>                      
+            </tr>
+        </table>
+    {% endfor %}
+
+   <ul class="tags" data-prototype='
+         <div class="">
+            <li>
+                <table class="table table-hover table-striped">
+                    <tr>
+                        <td>
+                            <div class="form-group">
+                            {{ form_label(edit_form.itens.vars.prototype.itemNumber) }}
+                            {{ form_widget(edit_form.itens.vars.prototype.itemNumber, {'attr': {'class': 'form-control input', 'maxlength':'3'} }) }}
+                            {{ form_errors(edit_form.itens.vars.prototype.itemNumber) }}
+                            </div>
+                        </td>
+                        <td>
+                            <div class="form-group">
+                            {{ form_label(edit_form.itens.vars.prototype.cost) }}
+                            {{ form_widget(edit_form.itens.vars.prototype.cost, {'attr': {'class': 'form-control custo', 'maxlength':'10'} }) }}
+                            {{ form_errors(edit_form.itens.vars.prototype.cost) }}
+                            </div>
+                        </td>
+                        <td>
+                            <div class="form-group">
+                            {{ form_label(edit_form.itens.vars.prototype.discount) }}
+                            {{ form_widget(edit_form.itens.vars.prototype.discount, {'attr': {'class': 'form-control desconto', 'maxlength':'10'} }) }}
+                            {{ form_errors(edit_form.itens.vars.prototype.discount) }}
+                            </div>                  
+                        </td>
+                        <!--td>
+                            <div class="form-group">
+                                <b>Total</b>
+                                <input class="form-control total" disabled>
+                            </div>                  
+                        </td-->                        
+                    </tr>
+                </table>
+            </li>
+        </div>
+    '>
+    </ul>            
+            
+    <hr />
+    {{ form_end(edit_form) }}
+    
+    <a href="{{ path('purchaseorder') }}" class="btn btn-default pull-right">Voltar</a>
+    {{ form(delete_form) }}
+{% endblock %}
+{% block javascripts %}
+<script type="text/javascript">
+
+$(document).ready(function() {
+    
+
+
+
+  $("#somar").click(function(){
+    
+        var total = 0;
+        var total2 = 0;
+    
+    $('.custo').each(function(){
+      var valor = Number($(this).val());
+      if (!isNaN(valor)) total += valor;
+    });
+    
+    $('.desconto').each(function(){
+      var valor2 = Number($(this).val());
+      if (!isNaN(valor2)) total2 += valor2;
+    });
+    
+    $(".resultado").html(total.toFixed(2));
+    $(".valorCusto").val(total.toFixed(2));
+    $(".valorDesconto").val(total2.toFixed(2));
+  });
+});
+
+// Get the ul that holds the collection of tags
+var collectionHolder = $('ul.tags');
+    
+// setup an "add a tag" link
+var $addTagLink = $('<a href="#" class="add_tag_link pull-right btn btn-primary">Inclir Item</a>');
+var $newLinkLi = $('<li></li>').append($addTagLink);
+
+jQuery(document).ready(function() {    
+    // add the "add a tag" anchor and li to the tags ul
+    collectionHolder.append($newLinkLi);
+
+    // count the current form inputs we have (e.g. 2), use that as the new
+    // index when inserting a new item (e.g. 2)
+    collectionHolder.data('index', collectionHolder.find(':input').length);
+
+    $addTagLink.on('click', function(e) {
+        // prevent the link from creating a "#" on the URL
+        e.preventDefault();
+
+        // add a new tag form (see next code block)
+        addTagForm(collectionHolder, $newLinkLi);
+    });
+});
+
+function addTagForm($collectionHolder, $newLinkLi) {
+    // Get the data-prototype explained earlier
+    var prototype = $collectionHolder.data('prototype');
+
+    // get the new index
+    var index = $collectionHolder.data('index');
+
+    // Replace '__name__' in the prototype's HTML to
+    // instead be a number based on how many items we have
+    var newForm = prototype.replace(/__name__/g, index);
+
+    // increase the index with one for the next item
+    $collectionHolder.data('index', index + 1);
+
+    // Display the form in the page in an li, before the "Add a tag" link li
+    var $newFormLi = $('<li></li>').append(newForm);
+    $newLinkLi.before($newFormLi);
+    
+    // add a delete link to the new form
+    addTagFormDeleteLink($newFormLi);    
+}
+
+function addTagFormDeleteLink($tagFormLi) {
+    var $removeFormA = $('<a href="#" class="btn btn-danger">Remover Item</a>');
+    $tagFormLi.append($removeFormA);
+
+    $removeFormA.on('click', function(e) {
+        // prevent the link from creating a "#" on the URL
+        e.preventDefault();
+
+        // remove the li for the tag form
+        $tagFormLi.remove();
+    });
+}
+</script>
+{% endblock %}

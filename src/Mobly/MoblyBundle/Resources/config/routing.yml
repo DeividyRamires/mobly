@@ -1,0 +1,15 @@
+mobly_mobly_homepage:
+    pattern:  /
+    defaults: { _controller: MoblyMoblyBundle:Default:index }
+
+MoblyMoblyBundle_purchaseorder:
+    resource: "@MoblyMoblyBundle/Resources/config/routing/purchaseorder.yml"
+    prefix:   /compra
+    
+MoblyMoblyBundle_item:
+    resource: "@MoblyMoblyBundle/Resources/config/routing/item.yml"
+    prefix:   /item
+    
+xml:
+    pattern: /xml
+    defaults: { _controller: MoblyMoblyBundle:Xml:xml }
